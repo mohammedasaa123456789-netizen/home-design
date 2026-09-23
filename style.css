@@ -1,0 +1,420 @@
+/* ===== إعادة الضبط ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --bg-dark: #0a0e1a;
+    --bg-mid: #131a2c;
+    --bg-panel: #1a2238;
+    --bg-elevated: #232c47;
+    --border: #2a3654;
+    --border-light: #3a4a6e;
+    
+    --accent: #e94560;
+    --accent-glow: #ff5a7a;
+    --accent-dim: #b8304a;
+    
+    --text: #e8ecf5;
+    --text-dim: #8a95b0;
+    --text-faint: #5a6684;
+    
+    --success: #2ecc71;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --shadow-accent: 0 0 20px rgba(233, 69, 96, 0.4);
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    
+    --topbar-h: 56px;
+    --toolbar-h: 64px;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, "SF Pro Display", "Segoe UI", Tahoma, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ===== الشريط العلوي ===== */
+.topbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--topbar-h);
+    background: linear-gradient(180deg, rgba(19, 26, 44, 0.98) 0%, rgba(19, 26, 44, 0.9) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+}
+
+.topbar h1 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+}
+
+.topbar .actions {
+    display: flex;
+    gap: 6px;
+}
+
+.topbar button {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text);
+    height: 36px;
+    min-width: 40px;
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.topbar button:active {
+    transform: scale(0.94);
+    background: var(--bg-panel);
+}
+
+.topbar button.active {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+    border-color: var(--accent-glow);
+    box-shadow: var(--shadow-accent);
+    color: #fff;
+}
+
+/* ===== منطقة العرض ===== */
+.workspace {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+#scene-container {
+    width: 100%;
+    height: 100%;
+}
+
+#scene-container canvas {
+    display: block;
+    touch-action: none;
+}
+
+/* ===== شريط الأدوات ===== */
+.toolbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--toolbar-h);
+    background: linear-gradient(180deg, rgba(19, 26, 44, 0.95) 0%, rgba(19, 26, 44, 0.98) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 8px;
+    z-index: 100;
+    border-top: 1px solid var(--border);
+}
+
+.tool {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    min-width: 64px;
+}
+
+.tool::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 0 0 3px 3px;
+    transition: width 0.2s ease;
+}
+
+.tool:active {
+    background: var(--bg-panel);
+}
+
+.tool.active {
+    color: var(--accent);
+    background: var(--bg-panel);
+}
+
+.tool.active::before {
+    width: 32px;
+}
+
+.tool-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+/* ===== لوحة تفاصيل الغرفة ===== */
+.room-panel {
+    position: fixed;
+    top: calc(var(--topbar-h) + 12px);
+    left: 12px;
+    right: 12px;
+    background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-mid) 100%);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg), 0 0 0 1px var(--border);
+    z-index: 200;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+    transform-origin: top center;
+}
+
+.room-panel.hidden {
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.room-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(233, 69, 96, 0.15) 0%, rgba(233, 69, 96, 0.05) 100%);
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-glow);
+}
+
+.room-panel-header button {
+    background: rgba(0, 0, 0, 0.25);
+    border: none;
+    color: var(--text-dim);
+    font-size: 16px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-panel-header button:active {
+    background: var(--accent);
+    color: #fff;
+    transform: scale(0.9);
+}
+
+.room-panel-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.room-panel-body label {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.room-panel-body select {
+    width: 100%;
+    padding: 13px 14px;
+    background: var(--bg-elevated);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a95b0' stroke-width='3' stroke-linecap='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left 14px center;
+    padding-left: 36px;
+}
+
+.room-panel-body select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+}
+
+.room-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-panel) 100%);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+}
+
+.room-info strong {
+    color: var(--accent-glow);
+    font-size: 24px;
+    font-weight: 800;
+    text-shadow: 0 0 12px rgba(233, 69, 96, 0.4);
+    letter-spacing: -0.5px;
+}
+
+/* ===== لوحة مكتبة الأثاث ===== */
+.furniture-panel {
+    position: fixed;
+    top: calc(var(--topbar-h) + 12px);
+    left: 12px;
+    right: 12px;
+    max-height: 60vh;
+    background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-mid) 100%);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg), 0 0 0 1px var(--border);
+    z-index: 200;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+    transform-origin: top center;
+}
+
+.furniture-panel.hidden {
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.furniture-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(233, 69, 96, 0.15) 0%, rgba(233, 69, 96, 0.05) 100%);
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-glow);
+}
+
+.furniture-header button {
+    background: rgba(0, 0, 0, 0.25);
+    border: none;
+    color: var(--text-dim);
+    font-size: 16px;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.furniture-header button:active {
+    background: var(--accent);
+    color: #fff;
+    transform: scale(0.9);
+}
+
+.furniture-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 12px;
+    overflow-y: auto;
+    max-height: calc(60vh - 50px);
+}
+
+.furniture-item {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--text);
+}
+
+.furniture-item:active {
+    background: var(--accent);
+    transform: scale(0.95);
+}
+
+.furniture-icon {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.furniture-name {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ===== شاشات صغيرة ===== */
+@media (max-width: 360px) {
+    .topbar h1 {
+        font-size: 14px;
+    }
+    .tool {
+        min-width: 56px;
+        padding: 8px 6px;
+        font-size: 10px;
+    }
+    .tool-icon {
+        font-size: 20px;
+    }
+}
