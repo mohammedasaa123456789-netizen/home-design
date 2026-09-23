@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تصميم منزل 3D</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <h1>تصميم منزل</h1>
+        <div class="actions">
+            <button id="btn-2d">2D</button>
+            <button id="btn-3d" class="active">3D</button>
+            <button id="btn-save">💾</button>
+        </div>
+    </header>
+
+    <main class="workspace">
+        <div id="scene-container"></div>
+    </main>
+
+    <footer class="toolbar">
+        <button class="tool active" data-tool="room">
+            <span class="tool-icon">🧱</span>
+            <span>غرفة</span>
+        </button>
+        <button class="tool" data-tool="select">
+            <span class="tool-icon">👆</span>
+            <span>تحديد</span>
+        </button>
+        <button class="tool" data-tool="furniture">
+            <span class="tool-icon">🛋️</span>
+            <span>أثاث</span>
+        </button>
+        <button class="tool" data-tool="delete">
+            <span class="tool-icon">🗑️</span>
+            <span>حذف</span>
+        </button>
+    </footer>
+
+    <div id="room-panel" class="room-panel hidden">
+        <div class="room-panel-header">
+            <span>تفاصيل الغرفة</span>
+            <button id="close-panel">✕</button>
+        </div>
+        <div class="room-panel-body">
+            <label>نوع الغرفة:</label>
+            <select id="room-type">
+                <option value="غرفة">غرفة</option>
+                <option value="غرفة نوم">غرفة نوم</option>
+                <option value="صالة">صالة</option>
+                <option value="مطبخ">مطبخ</option>
+                <option value="حمام">حمام</option>
+                <option value="بلكونة">بلكونة</option>
+                <option value="غرفة أطفال">غرفة أطفال</option>
+                <option value="مكتب">مكتب</option>
+            </select>
+            <div class="room-info">
+                <span>المساحة:</span>
+                <strong id="room-area">0</strong>
+                <span>م²</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="furniture-panel" class="furniture-panel hidden">
+        <div class="furniture-header">
+            <span>🛋️ مكتبة الأثاث</span>
+            <button id="close-furniture">✕</button>
+        </div>
+        <div id="furniture-grid" class="furniture-grid"></div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
